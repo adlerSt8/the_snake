@@ -42,32 +42,60 @@ clock = pygame.time.Clock()
 
 
 class GameObject:
+    """
+    Базовый класс для объектов игры
+    position - позиция объекта на игровом поле
+    body-color - цвет объекта
+    """
+
     def __init__(self, position=0, body_color='0,0,0'):
         self.position = position
         self.body_color = body_color
 
     def draw(self, surface):
+        """
+        Метод для отрисовки объекта на игровом поле.
+        surface - поверхность, на которой будет отрисован объект.
+        """
         pass
 
 
 class Apple(GameObject):
+    """
+    Класс для яблока в игре.
+    Яблоко появляется в случайной позиции на игровом поле и служит целью для змейки.
+    """
     def __init__(self):
         self.randomize_position()
         super().__init__(self.position, APPLE_COLOR)
 
     def randomize_position(self):
+        """
+        Метод для установки случайной позиции яблока на игровом поле.
+        """
         self.position = (
             randint(0, GRID_WIDTH - 1) * GRID_SIZE,
             randint(0, GRID_HEIGHT - 1) * GRID_SIZE
         )
 
     def draw(self, surface):
+        """
+        Метод для отрисовки яблока на игровом поле.
+
+        Параметры:
+        - surface: Поверхность Pygame, на которой будет отрисован яблоко.
+        """
+
         rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(surface, self.body_color, rect)
         pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
 
 
 class Snake(GameObject):
+    """
+    Класс для змейки в игре.
+    Змейка может двигаться в разных направлениях и увеличивать свой размер, съедая яблоки.
+    """
     def __init__(self):
         self.length = 1
         self.positions = [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)]
@@ -78,9 +106,18 @@ class Snake(GameObject):
         super().__init__(self.positions[0], self.body_color)
 
     def get_head_position(self):
+        """
+        Возвращает текущую позицию головы змейки.
+
+        Возвращаемое значение:
+        - Кортеж (x, y), представляющий позицию головы змейки.
+        """
         return self.positions[0]
 
     def update_direction(self):
+        """
+        Обновляет направление движения змейки.
+        """
         if self.next_direction:
             self.direction = self.next_direction
             self.next_direction = None
@@ -107,6 +144,10 @@ class Snake(GameObject):
             self.length += 1
 
     def draw(self, surface):
+        """
+        Отрисовывает змейку на игровом поле.
+        - surface: поверхность Pygame, на которой будет отрисована змейка.
+        """
         for position in self.positions[:-1]:
             rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
             pygame.draw.rect(surface, self.body_color, rect)
@@ -121,12 +162,19 @@ class Snake(GameObject):
             pygame.draw.rect(surface, BOARD_BACKGROUND_COLOR, last_rect)
 
     def reset(self):
+        """
+        Сбрасывает змейку в начальное состояние.
+        """
         self.length = 1
         self.positions = [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)]
         self.direction = RIGHT
         self.next_direction = None
 
+
 def handle_keys(self):
+    """
+    Обрабатывает нажатия клавиш для управления змейкой.
+    """
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -140,6 +188,7 @@ def handle_keys(self):
                 self.next_direction = LEFT
             elif event.key == pygame.K_RIGHT and self.direction != LEFT:
                 self.next_direction = RIGHT
+
 
 def main():
     snake = Snake()
