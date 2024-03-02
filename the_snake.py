@@ -91,7 +91,10 @@ class Snake(GameObject):
     def move(self):
         """Двигает змейку в текущем направлении"""
         head = self.positions[0]
-        new_head = (head[0] + self.direction[0] * GRID_SIZE, head[1] + self.direction[1] * GRID_SIZE)
+        new_head = (
+            head[0] + self.direction[0] * GRID_SIZE,
+            head[1] + self.direction[1] * GRID_SIZE
+        )
 
         # Проверяем, достигла ли голова змейки края экрана
         if new_head[0] < 0:
@@ -152,6 +155,15 @@ def handle_keys(snake):
 
 
 def main():
+    """
+    Главная функция игры "Змейка".
+
+    Эта функция инициализирует змейку и яблоко, затем входит в основной цикл игры,
+    обрабатывая ввод пользователя, обновляя состояние змейки и яблока, и отрисовывая
+    их на экране. Цикл продолжается до тех пор, пока змейка не столкнется с границей
+    экрана или с собственным телом.
+    """
+
     snake = Snake()
     apple = Apple()
 
