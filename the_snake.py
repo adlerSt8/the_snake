@@ -1,27 +1,34 @@
 import pygame
 from random import randint
+
 # Инициализация PyGame
 pygame.init()
+
 # Константы для размеров поля и сетки
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 GRID_SIZE = 20
 GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
 GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
+
 # Направления движения
 UP = (0, -1)
 DOWN = (0, 1)
 LEFT = (-1, 0)
 RIGHT = (1, 0)
+
 # Цвета
 BOARD_BACKGROUND_COLOR = (0, 0, 0)
 BORDER_COLOR = (93, 216, 228)
 APPLE_COLOR = (255, 0, 0)
 SNAKE_COLOR = (0, 255, 0)
+
 # Скорость движения змейки
 SPEED = 20
+
 # Настройка игрового окна
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
 pygame.display.set_caption('Змейка')
+
 # Настройка времени
 clock = pygame.time.Clock()
 
@@ -67,14 +74,17 @@ class Snake(GameObject):
         self.body_color = SNAKE_COLOR
         self.last = None
         super().__init__(self.positions[0], self.body_color)
+
     def get_head_position(self):
         """Возвращает текущую позицию головы змейки"""
         return self.positions[0]
+
     def update_direction(self):
         """Обновляет направление движения змейки"""
         if self.next_direction:
             self.direction = self.next_direction
             self.next_direction = None
+
     def move(self):
         """Двигает змейку в текущем направлении"""
         head = self.positions[0]
@@ -82,6 +92,7 @@ class Snake(GameObject):
             head[0] + self.direction[0] * GRID_SIZE,
             head[1] + self.direction[1] * GRID_SIZE
         )
+
         # Проверяем, достигла ли голова змейки края экрана
         if new_head[0] < 0:
             new_head = (SCREEN_WIDTH - GRID_SIZE, new_head[1])
@@ -91,12 +102,15 @@ class Snake(GameObject):
             new_head = (new_head[0], SCREEN_HEIGHT - GRID_SIZE)
         elif new_head[1] >= SCREEN_HEIGHT:
             new_head = (new_head[0], 0)
+
         self.positions.insert(0, new_head)
+
         if self.length > 1:
             # Обновляем last перед удалением последнего элемента
             self.last = self.positions.pop()
         else:
             self.length += 1
+
     def draw(self, surface):
         """Отрисовывает змейку на игровом поле"""
         for position in self.positions:
@@ -109,6 +123,7 @@ class Snake(GameObject):
         if self.last:
             last_rect = pygame.Rect(self.last, (GRID_SIZE, GRID_SIZE))
             pygame.draw.rect(surface, BOARD_BACKGROUND_COLOR, last_rect)
+
     def reset(self):
         """Сбрасывает змейку в начальное состояние"""
         self.length = 1
@@ -166,7 +181,6 @@ def main():
         pygame.display.update()
 
     pygame.quit()
-
 
 
 if __name__ == '__main__':
