@@ -35,6 +35,7 @@ clock = pygame.time.Clock()
 
 class GameObject:
     """Базовый класс для объектов игры"""
+
     def __init__(self, position=(0, 0), body_color=(0, 0, 0)):
         self.position = position
         self.body_color = body_color
@@ -48,9 +49,14 @@ class GameObject:
 
 class Apple(GameObject):
     """Класс для яблока в игре"""
+
     def __init__(self):
-        super().__init__((0, 0), APPLE_COLOR) # Используем начальные значения для position и body_color
-        self.randomize_position() # Сбрасываем позицию яблока
+
+        # Используем начальные значения для position и body_color
+        super().__init__((0, 0), APPLE_COLOR)
+
+        # Сбрасываем позицию яблока
+        self.randomize_position()
 
     def randomize_position(self):
         """Метод для установки случайной позиции яблока на игровом поле"""
@@ -66,6 +72,7 @@ class Apple(GameObject):
 
 class Snake(GameObject):
     """Класс для змейки в игре"""
+
     def __init__(self):
         self.length = 1
         self.positions = [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)]
