@@ -42,28 +42,33 @@ class GameObject:
 
     def draw(self, surface):
         """Метод для отрисовки объекта на игровом поле"""
-        pass
+        rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
+        pygame.draw.rect(surface, self.body_color, rect)
+        pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
 
 
 class Apple(GameObject):
     """Класс для яблока в игре"""
 
-    def __init__(self):
+    def __init__(self, snake):
+        self.snake = snake
         self.randomize_position()
         super().__init__(self.position, APPLE_COLOR)
 
     def randomize_position(self):
         """Метод для установки случайной позиции яблока на игровом поле"""
-        self.position = (
-            randint(0, GRID_WIDTH - 1) * GRID_SIZE,
-            randint(0, GRID_HEIGHT - 1) * GRID_SIZE
-        )
+        while True:
+            new_position = (
+                randint(0, GRID_WIDTH - 1) * GRID_SIZE,
+                randint(0, GRID_HEIGHT - 1) * GRID_SIZE
+            )
+            if new_position not in self.snake.positions:
+                self.position = new_position
+                break
 
     def draw(self, surface):
         """Метод для отрисовки яблока на игровом поле"""
-        rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
-        pygame.draw.rect(surface, self.body_color, rect)
-        pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
+        super().draw(surface)
 
 
 class Snake(GameObject):
@@ -116,10 +121,9 @@ class Snake(GameObject):
 
     def draw(self, surface):
         """Отрисовывает змейку на игровом поле"""
-        for position in self.positions[:-1]:
-            rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
-            pygame.draw.rect(surface, self.body_color, rect)
-            pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
+        for position in self.positions:
+            self.position = position
+            super().draw(surface)
 
         head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(surface, self.body_color, head_rect)
@@ -161,7 +165,7 @@ def main():
     Обновляется их состояние.
     """
     snake = Snake()
-    apple = Apple()
+    apple = Apple(snake)
 
     running = True
     while running:
@@ -177,7 +181,8 @@ def main():
             # Добавляем новый сегмент в список позиций змейки
             snake.positions.append(snake.positions[-1])
 
-        if snake.positions[0] in snake.positions[1:]:
+        #Проверка столкновения с собой
+        if snake.get_head_position() in snake.positions[1:]:
             snake.reset()
 
         screen.fill(BOARD_BACKGROUND_COLOR)
@@ -190,3 +195,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
