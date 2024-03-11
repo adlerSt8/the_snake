@@ -40,11 +40,15 @@ class GameObject:
         self.position = position
         self.body_color = body_color
 
+    def draw_square(self, surface, position, color):
+        """Метод для отрисовки квадрата на игровом поле"""
+        rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
+        pygame.draw.rect(surface, color, rect)
+        pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
+
     def draw(self, surface):
         """Метод для отрисовки объекта на игровом поле"""
-        rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
-        pygame.draw.rect(surface, self.body_color, rect)
-        pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
+        self.draw_square(surface, self.position, self.body_color)
 
 
 class Apple(GameObject):
@@ -121,15 +125,7 @@ class Snake(GameObject):
     def draw(self, surface):
         """Отрисовывает змейку на игровом поле"""
         for position in self.positions:
-            super().draw(surface)
-            self.position = position
-
-        head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
-        pygame.draw.rect(surface, self.body_color, head_rect)
-        pygame.draw.rect(surface, BORDER_COLOR, head_rect, 1)
-        if self.last:
-            last_rect = pygame.Rect(self.last, (GRID_SIZE, GRID_SIZE))
-            pygame.draw.rect(surface, BOARD_BACKGROUND_COLOR, last_rect)
+            self.draw_square(surface, position, self.body_color)
 
     def reset(self):
         """Сбрасывает змейку в начальное состояние"""
